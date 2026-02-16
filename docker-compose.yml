@@ -1,0 +1,41 @@
+version: "3.9"
+
+services:
+
+  backend:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile
+    container_name: cloudforge_backend
+    ports:
+      - "5000:5000"
+    depends_on:
+      - db
+    environment:
+      - DB_HOST=db
+      - DB_NAME=cloudforge
+      - DB_USER=admin
+      - DB_PASS=admin123
+    restart: always
+
+  db:
+    image: postgres:15
+    container_name: cloudforge_db
+    environment:
+      POSTGRES_DB: cloudforge
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: admin123
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    restart: always
+
+  adminer:
+    image: adminer
+    container_name: cloudforge_adminer
+    ports:
+      - "8080:8080"
+    restart: always
+
+volumes:
+  pgdata:
+
