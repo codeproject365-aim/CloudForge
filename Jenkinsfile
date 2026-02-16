@@ -2,6 +2,7 @@ pipeline {
     agent any
 
     stages {
+
         stage('Clone') {
             steps {
                 git branch: 'main',
@@ -9,23 +10,24 @@ pipeline {
             }
         }
 
-        stage('Build') {
+        stage('Build Docker Image') {
             steps {
-                echo "Building CloudForge..."
+                sh 'docker build -t cloudforge-app .'
             }
         }
 
-        stage('Test') {
+        stage('Run Container') {
             steps {
-                echo "Running tests..."
-            }
-        }
+                sh '''
+                docker stop cloudforge || true
+                docker rm cloudforge || true
 
-        stage('Deploy') {
-            steps {
-                echo "Deploying App..."
+                docker run -d \
+                -p 5000:5000 \
+                --name cloudforge \
+                cloudforge-app
+                '''
             }
         }
     }
 }
-
