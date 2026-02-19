@@ -10,11 +10,12 @@ pipeline {
             }
         }
 
-        stage('Build Docker Image') {
-            steps {
-                sh 'docker build -t cloudforge-app .'
-            }
-        }
+      stage('Build Docker Image') {
+    steps {
+        sh 'docker build -t cloudforge-app -f docker/Dockerfile .'
+    }
+}
+
 
         stage('Run Container') {
             steps {
